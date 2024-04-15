@@ -1,8 +1,9 @@
 using UnityEngine;
 
-[RequireComponent(typeof(UnitParametrs))]
-public class Unit : MonoBehaviour
+[RequireComponent(typeof(UnitParametrs), typeof(Health))]
+public class Unit : MonoBehaviour, IHealth
 {
+    [field: SerializeField] public Health health {  get; private set; }
     [field: SerializeField] public bool IsEnemy { get; private set; } = false;
     [field: SerializeField] public UnitParametrs parameters;
     [SerializeField] private UnitState _defaultStateSO;
@@ -54,4 +55,15 @@ public class Unit : MonoBehaviour
 
         _currentState.Init();
     }
+
+# if UNITY_EDITOR
+    [Space (24)]
+    [SerializeField] bool _debug = false;
+    private void OnDrawGizmos()
+    {
+        if (_debug == false) return;
+        
+        if (_chaseStateSO != null) { _chaseStateSO.DebugDrawDistance(this); }
+    }
+#endif
 }
