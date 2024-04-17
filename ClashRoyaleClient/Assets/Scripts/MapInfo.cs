@@ -3,20 +3,28 @@ using UnityEngine;
 
 public class MapInfo : Singleton<MapInfo>
 {
-    [SerializeField] private List<Tower> _enemyTowers = new List<Tower>();
-    [SerializeField] private List<Tower> _playersTowers = new List<Tower>();
+    [SerializeField] private List<Tower> _enemyTowers;
+    [SerializeField] private List<Tower> _playersTowers;
 
-    [SerializeField] private List<Unit> _enemyWalkingUnits = new List<Unit>();
-    [SerializeField] private List<Unit> _playersWalkingUnits = new List<Unit>();
-    [SerializeField] private List<Unit> _enemyFlyingUnits = new List<Unit>();
-    [SerializeField] private List<Unit> _playersFlyingUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _enemyWalkingUnits;
+    [SerializeField] private List<Unit> _playersWalkingUnits;
+    [SerializeField] private List<Unit> _enemyFlyingUnits;
+    [SerializeField] private List<Unit> _playersFlyingUnits;
 
     private void Start()
     {
+        //_enemyTowers = new List<Tower>();
+        //_playersTowers = new List<Tower>();
+        //_enemyWalkingUnits = new List<Unit>();
+        //_playersWalkingUnits = new List<Unit>();
+        //_enemyFlyingUnits = new List<Unit>();
+        //_playersFlyingUnits = new List<Unit>();
+
         SubscribeDestroy(_enemyTowers);
         SubscribeDestroy(_playersTowers);
         SubscribeDestroy(_enemyWalkingUnits);
         SubscribeDestroy(_playersWalkingUnits);
+
     }
 
     public void AddUnit(Unit unit)
