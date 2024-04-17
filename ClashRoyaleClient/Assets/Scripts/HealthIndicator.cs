@@ -5,32 +5,35 @@ using UnityEngine;
 public class HealthIndicator : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _tmp;
-    [SerializeField] private float upOffset = 50f;
     [SerializeField] private RectTransform _rectTrans;
     [SerializeField] private Image _filledImage;
-    private Transform _owner;
+    [SerializeField] private Transform _owner;
     private Health _ownerHealth;
     private float _maxHealth;
 
-    public void Init(Transform owner)
+    private void Start()
     {
-        _owner = owner;
         _ownerHealth = _owner.GetComponent<Health>();
         _maxHealth = _ownerHealth.max;
+        _tmp.text = _maxHealth.ToString("0.0");
+
+        _ownerHealth.UpdateHealth += UpdateHealth;
     }
 
-    void Update()
+    void UpdateHealth(float current)
     {
         if (_owner == null)
         {
             Destroy(gameObject);
             return;
         }
-        
-        Vector3 pos = Camera.main.WorldToScreenPoint(_owner.position) + new Vector3(0f, upOffset);
-        _rectTrans.position = pos;
 
-        _filledImage.fillAmount = _ownerHealth.Current / _maxHealth;
-        _tmp.text = _ownerHealth.Current.ToString("0.0");
+        _filledImage.fillAmount = current / _maxHealth;
+        _tmp.text = current.ToString("0.0");
+    }
+
+    private void OnDestroy()
+    {
+        _ownerHealth.UpdateHealth -= UpdateHealth;
     }
 }

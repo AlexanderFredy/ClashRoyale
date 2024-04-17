@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,20 +6,56 @@ public class MapInfo : Singleton<MapInfo>
     [SerializeField] private List<Tower> _enemyTowers = new List<Tower>();
     [SerializeField] private List<Tower> _playersTowers = new List<Tower>();
 
-    [SerializeField] private List<Unit> _enemyUnits = new List<Unit>();
-    [SerializeField] private List<Unit> _playersUnits = new List<Unit>();
-
-    [SerializeField] private HealthIndicator _healthIndicatorPrefab;
-    [SerializeField] private Canvas _canvas;
+    [SerializeField] private List<Unit> _enemyWalkingUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _playersWalkingUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _enemyFlyingUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _playersFlyingUnits = new List<Unit>();
 
     private void Start()
     {
-        CreateHealthIndicators();
+        SubscribeDestroy(_enemyTowers);
+        SubscribeDestroy(_playersTowers);
+        SubscribeDestroy(_enemyWalkingUnits);
+        SubscribeDestroy(_playersWalkingUnits);
     }
 
-    public bool TryGetNearestUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    public void AddUnit(Unit unit)
     {
-        List<Unit> units = enemy ? _enemyUnits : _playersUnits;
+        List<Unit> list;
+        if (unit.IsEnemy) list = unit.parameters.ifFlying ? _enemyFlyingUnits : _enemyWalkingUnits;
+        else list = unit.parameters.ifFlying ? _playersFlyingUnits : _playersWalkingUnits;
+
+        AddObjectToList(list, unit);
+    }
+
+    public bool TryGetNearestAnyUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    {
+        TryGetNearestWalkingUnit(currentPosition, enemy, out Unit walking, out float walkingDistance);
+        TryGetNearestFlyingUnit(currentPosition, enemy, out Unit flying, out float flyingDistance);
+
+        if (flyingDistance < walkingDistance)
+        {
+            unit = flying;
+            distance = flyingDistance;
+        } else
+        {
+            unit = walking;
+            distance = walkingDistance;
+        }
+
+        return unit;
+    }
+
+    public bool TryGetNearestWalkingUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    {
+        List<Unit> units = enemy ? _enemyWalkingUnits : _playersWalkingUnits;
+        unit = GetNearest(currentPosition, units, out distance);
+        return unit;
+    }
+
+    public bool TryGetNearestFlyingUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    {
+        List<Unit> units = enemy ? _enemyFlyingUnits : _playersFlyingUnits;
         unit = GetNearest(currentPosition, units, out distance);
         return unit;
     }
@@ -52,38 +87,70 @@ public class MapInfo : Singleton<MapInfo>
         return nearest;
     }
 
-    private void CreateHealthIndicators()
+    private void SubscribeDestroy<T>(List<T> objects) where T : IDestroyed
     {
-        foreach (var item in _enemyTowers)
+        for (int i = 0; i < objects.Count; i++)
         {
-            Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
-        }
+            T obj = objects[i];
+            objects[i].Destroyed += RemoveAndunsubscribe;
 
-        foreach (var item in _playersTowers)
-        {
-            Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
-        }
-
-        foreach (var item in _enemyUnits)
-        {
-            Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
-        }
-
-        foreach (var item in _playersUnits)
-        {
-            Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
+            void RemoveAndunsubscribe()
+            {
+                RemoveObjectFromList(objects, obj);
+                obj.Destroyed -= RemoveAndunsubscribe;
+            }
         }
     }
 
-    public void RemoveUnitFromList(Unit unit)
-    {
-        _enemyUnits.Remove(unit);
-        _playersUnits.Remove(unit);
+    public void AddObjectToList<T>(List<T> list, T obj) where T : IDestroyed
+    { 
+        list.Add(obj);
+        obj.Destroyed += RemoveAndunsubscribe;
+
+        void RemoveAndunsubscribe()
+        {
+            RemoveObjectFromList(list, obj);
+            obj.Destroyed -= RemoveAndunsubscribe;
+        }
     }
 
-    public void RemoveTowerFromList(Tower tower)
+    public void RemoveObjectFromList<T>(List<T> list, T obj)
     {
-        _enemyTowers.Remove(tower);
-        _playersTowers.Remove(tower);
+        if (list.Contains(obj)) list.Remove(obj);
     }
+
+    //public void RemoveUnitFromList(Unit unit)
+    //{
+    //    _enemyUnits.Remove(unit);
+    //    _playersUnits.Remove(unit);
+    //}
+
+    //public void RemoveTowerFromList(Tower tower)
+    //{
+    //    _enemyTowers.Remove(tower);
+    //    _playersTowers.Remove(tower);
+    //}
+
+    //private void CreateHealthIndicators()
+    //{
+    //    foreach (var item in _enemyTowers)
+    //    {
+    //        Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
+    //    }
+
+    //    foreach (var item in _playersTowers)
+    //    {
+    //        Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
+    //    }
+
+    //    foreach (var item in _enemyUnits)
+    //    {
+    //        Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
+    //    }
+
+    //    foreach (var item in _playersUnits)
+    //    {
+    //        Instantiate(_healthIndicatorPrefab, _canvas.transform).Init(item.transform);
+    //    }
+    //}
 }

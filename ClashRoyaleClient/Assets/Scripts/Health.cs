@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    public Action<float> UpdateHealth;
+
     [field: SerializeField] public float max { get; private set; } = 10f;
     public float Current { get; private set; }
 
@@ -15,23 +16,14 @@ public class Health : MonoBehaviour
     public void ApplyDamage(float value)
     {
         Current -= value;
-        //print($"Object {name}: was {Current + value}, is {Current}");
+ 
+        if (Current < 0) Current = 0;
 
-        if (Current < 0)
-        {
-            Current = 0;
-
-            if (TryGetComponent(out Unit unit))
-                MapInfo.Instance.RemoveUnitFromList(unit);
-            else if (TryGetComponent(out Tower tower))
-                MapInfo.Instance.RemoveTowerFromList(tower);
-
-            Destroy(gameObject);
-        }
+        UpdateHealth?.Invoke(Current);
     }
 }
 
-interface IHealth
+public interface IHealth
 {
     Health health { get;}
 }

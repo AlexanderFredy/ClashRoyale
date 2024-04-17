@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(UnitParametrs), typeof(Health))]
-public class Unit : MonoBehaviour, IHealth
+public class Unit : MonoBehaviour, IHealth, IDestroyed
 {
+    public event Action Destroyed;
+
     [field: SerializeField] public Health health {  get; private set; }
     [field: SerializeField] public bool IsEnemy { get; private set; } = false;
     [field: SerializeField] public UnitParametrs parameters;
@@ -16,6 +19,21 @@ public class Unit : MonoBehaviour, IHealth
 
     private void Start()
     {
+        CreateStates();
+
+        _currentState = _defaultState;
+        _currentState.Init();
+
+        health.UpdateHealth += CheckDestroy;
+    }
+
+    private void Update()
+    {
+        _currentState.Run();
+    }
+
+    private void CreateStates()
+    {
         _defaultState = Instantiate(_defaultStateSO);
         _defaultState.Constructor(this);
 
@@ -24,14 +42,16 @@ public class Unit : MonoBehaviour, IHealth
 
         _attackState = Instantiate(_attackStateSO);
         _attackState.Constructor(this);
-
-        _currentState = _defaultState;
-        _currentState.Init();
     }
 
-    private void Update()
+    private void CheckDestroy(float currentHP)
     {
-        _currentState.Run();
+        if (currentHP > 0) return;
+
+        Destroy(gameObject);
+        health.UpdateHealth -= CheckDestroy;
+
+        Destroyed?.Invoke();
     }
 
     public void SetState(UnitStateType type)
@@ -59,6 +79,7 @@ public class Unit : MonoBehaviour, IHealth
 # if UNITY_EDITOR
     [Space (24)]
     [SerializeField] bool _debug = false;
+
     private void OnDrawGizmos()
     {
         if (_debug == false) return;
