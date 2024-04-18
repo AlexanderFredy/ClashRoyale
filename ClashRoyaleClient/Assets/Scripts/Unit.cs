@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(UnitParametrs), typeof(Health))]
+[RequireComponent(typeof(UnitParametrs), typeof(Health), typeof(UnitAnimation))]
 public class Unit : MonoBehaviour, IHealth, IDestroyed
 {
     public event Action Destroyed;
@@ -9,6 +9,7 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
     [field: SerializeField] public Health health {  get; private set; }
     [field: SerializeField] public bool IsEnemy { get; private set; } = false;
     [field: SerializeField] public UnitParametrs parameters;
+    [SerializeField] private UnitAnimation _animation;
     [SerializeField] private UnitState _defaultStateSO;
     [SerializeField] private UnitState _chaseStateSO;
     [SerializeField] private UnitState _attackStateSO;
@@ -23,6 +24,8 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
 
         _currentState = _defaultState;
         _currentState.Init();
+
+        _animation.Init(this);
 
         health.UpdateHealth += CheckDestroy;
     }
@@ -74,6 +77,7 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
         }
 
         _currentState.Init();
+        _animation.SetState(type);
     }
 
 # if UNITY_EDITOR
