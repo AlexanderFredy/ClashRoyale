@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Units
+  m_EditorClassIdentifier: 
+  m_GroupName: Units
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 5ce58b5b3fe1760438c103dee9b678c3
+  m_SerializeEntries:
+  - m_GUID: fa5dd777b0c961646bb790c0a98c541c
+    m_Address: Assets/Prefabs/Warrior (Snake).prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - All
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e2b2aa24d6247c6419c3f3a10900cb05
+    m_Address: Assets/Prefabs/Sphere.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - All
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: d36e2ad0ac09b014188bd33bc6d9b4e9, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f3fe1722e0dcdde458a3aaad2d594844, type: 2}
+    - {fileID: 11400000, guid: e00f5d66a7152de4f8bb012aa07bea43, type: 2}
