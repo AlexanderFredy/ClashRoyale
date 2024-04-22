@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public abstract class UnitStateAttack : UnitState
 {
@@ -8,6 +9,7 @@ public abstract class UnitStateAttack : UnitState
     private float _stopAttackDistance = 0;
     protected bool _targetIsEnemy;
     protected Health _target;
+    private VisualEffect _effect;
 
     public override void Constructor(Unit unit)
     {
@@ -27,6 +29,8 @@ public abstract class UnitStateAttack : UnitState
 
         _time = 0f;
         _unit.transform.LookAt(_target.transform.position);
+
+        _effect = _unit.GetComponent<UnitAnimation>().AttackEffect;
     }
 
     public override void Run()
@@ -50,6 +54,8 @@ public abstract class UnitStateAttack : UnitState
     protected virtual void Attack()
     {
         _target.ApplyDamage(_damage);
+
+        if (_effect) _effect.Play();
     }
 
     public override void Finish()

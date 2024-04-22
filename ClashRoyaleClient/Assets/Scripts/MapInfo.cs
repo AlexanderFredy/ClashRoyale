@@ -13,18 +13,12 @@ public class MapInfo : Singleton<MapInfo>
 
     private void Start()
     {
-        //_enemyTowers = new List<Tower>();
-        //_playersTowers = new List<Tower>();
-        //_enemyWalkingUnits = new List<Unit>();
-        //_playersWalkingUnits = new List<Unit>();
-        //_enemyFlyingUnits = new List<Unit>();
-        //_playersFlyingUnits = new List<Unit>();
-
         SubscribeDestroy(_enemyTowers);
         SubscribeDestroy(_playersTowers);
         SubscribeDestroy(_enemyWalkingUnits);
         SubscribeDestroy(_playersWalkingUnits);
-
+        SubscribeDestroy(_enemyFlyingUnits);
+        SubscribeDestroy(_playersFlyingUnits);
     }
 
     public void AddUnit(Unit unit)
@@ -100,12 +94,12 @@ public class MapInfo : Singleton<MapInfo>
         for (int i = 0; i < objects.Count; i++)
         {
             T obj = objects[i];
-            objects[i].Destroyed += RemoveAndunsubscribe;
+            objects[i].Destroyed += RemoveAndUnsubscribe;
 
-            void RemoveAndunsubscribe()
+            void RemoveAndUnsubscribe()
             {
                 RemoveObjectFromList(objects, obj);
-                obj.Destroyed -= RemoveAndunsubscribe;
+                obj.Destroyed -= RemoveAndUnsubscribe;
             }
         }
     }

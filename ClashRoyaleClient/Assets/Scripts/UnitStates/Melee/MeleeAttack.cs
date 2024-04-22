@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 [CreateAssetMenu(fileName = "MeleeAttack", menuName = "UnitState/MeleeAttack")]
 public class MeleeAttack : UnitStateAttack

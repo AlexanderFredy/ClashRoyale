@@ -20,6 +20,11 @@ public class HealthIndicator : MonoBehaviour
         _ownerHealth.UpdateHealth += UpdateHealth;
     }
 
+    private void Update()
+    {
+        transform.rotation = Quaternion.identity;
+    }
+
     void UpdateHealth(float current)
     {
         if (_owner == null)
