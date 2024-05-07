@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class DeckLoader : MonoBehaviour
     [SerializeField] private DeckManager _manager;
     [SerializeField] private List<int> _availableCards = new List<int>();
     [SerializeField] private int[] _selectedCards;// = new int[5];
+
+    string stringIDs = string.Empty;
 
     private void Start()
     {
@@ -47,8 +50,51 @@ public class DeckLoader : MonoBehaviour
         }
 
         _manager.Init(_availableCards, _selectedCards);
+        _manager.DeckUploadToDataBase += SaveDeckToDataBase;
+    }
+
+    private void SaveDeckToDataBase(IReadOnlyList<Card> list)
+    {
+        foreach (Card card in list)
+        {
+            stringIDs += card.id.ToString() + ",";
+        }
+
+        StartUpload(stringIDs);
+        print("upload..");
+    }
+
+    private void StartUpload(string strIDs)
+    {       
+        WebRequestToMySQL.Instance.StartPost(URILibrary.MAIN + URILibrary.SAVEDECK,
+            new Dictionary<string, string>
+            {
+                { "userID","9" },//UserInfo.Instance.ID.ToString() }
+                { "cardIDs",strIDs }
+            },
+            SuccessUpload,
+            ErrorUpload
+            );
+    }
+
+    private void ErrorUpload(string error)
+    {
+        Debug.LogError(error);
+        StartUpload(stringIDs);
+    }
+
+    private void SuccessUpload(string data)
+    {
+        stringIDs = string.Empty;
+        print("upload deck " + (data == "done" ? "succes" : "fail"));
+    }
+
+    private void OnDestroy()
+    {
+        _manager.DeckUploadToDataBase -= SaveDeckToDataBase;
     }
 }
+
 
 [System.Serializable]
 public class DeckData

@@ -27,6 +27,9 @@ public class CardSelecter : MonoBehaviour
         {
             _selectedCards.Add(_deckManager.SelectedCards[i]);
         }
+
+        _selectedDeckUI.UpdateCardsList(SelectedCards);
+        _availableDeckUI.UpdateCardsList(AvailableCards, SelectedCards);
     }
 
     public void SetSelectToggleIndex(int index)
@@ -36,9 +39,13 @@ public class CardSelecter : MonoBehaviour
 
     public void SelectCard(int cardID)
     {
-        _selectedCards[_selectToggleIndex] = _availableCards[cardID-1];
+        _selectedCards[_selectToggleIndex] = _availableCards[cardID - 1];
         _selectedDeckUI.UpdateCardsList(SelectedCards);
         _availableDeckUI.UpdateCardsList(AvailableCards, SelectedCards);
     }
-    
+
+    public void SaveDeckToDataBase()
+    {
+        _deckManager.SaveDeckToDataBase(SelectedCards);
+    }
 }

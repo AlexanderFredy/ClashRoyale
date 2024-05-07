@@ -6,6 +6,7 @@ public class DeckManager : MonoBehaviour
 {
     public event Action<IReadOnlyList<Card>, IReadOnlyList<Card>> UpdateAvailable;
     public event Action<IReadOnlyList<Card>> UpdateSelected;
+    public event Action<IReadOnlyList<Card>> DeckUploadToDataBase;
 
     [SerializeField] private Card[] _cards;
     [SerializeField] private List<Card> _availableCards;// = new List<Card>();
@@ -37,6 +38,18 @@ public class DeckManager : MonoBehaviour
 
         UpdateAvailable?.Invoke(AvailableCards, SelectedCards);
         UpdateSelected?.Invoke(SelectedCards);
+    }
+
+    public void SaveDeckToDataBase(IReadOnlyList<Card> deck) 
+    {
+        _selectedCards.Clear();
+        for (int i = 0; i < deck.Count; i++)
+        {
+            _selectedCards.Add(deck[i]);
+        }
+        UpdateSelected?.Invoke(SelectedCards);
+
+        DeckUploadToDataBase?.Invoke(deck);
     }
 }
 

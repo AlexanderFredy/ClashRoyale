@@ -7,4 +7,5 @@ public class URILibrary : MonoBehaviour
     public const string REGISTRATION = "Authorization/registration.php";
 
     public const string GETDECKINFO = "Game/getDeckInfo.php";
+    public const string SAVEDECK = "Game/saveDeck.php";
 }
