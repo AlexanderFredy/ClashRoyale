@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DeckLoader : MonoBehaviour
@@ -20,7 +21,7 @@ public class DeckLoader : MonoBehaviour
         WebRequestToMySQL.Instance.StartPost(URILibrary.MAIN + URILibrary.GETDECKINFO,
             new Dictionary<string, string>
             {
-                { "userID","9" }//UserInfo.Instance.ID.ToString() }
+                { "userID",UserInfo.Instance.ID.ToString() }
             },
             SuccessLoad,
             ErrorLoad
@@ -69,7 +70,7 @@ public class DeckLoader : MonoBehaviour
         WebRequestToMySQL.Instance.StartPost(URILibrary.MAIN + URILibrary.SAVEDECK,
             new Dictionary<string, string>
             {
-                { "userID","9" },//UserInfo.Instance.ID.ToString() }
+                { "userID",UserInfo.Instance.ID.ToString() },
                 { "cardIDs",strIDs }
             },
             SuccessUpload,
@@ -86,7 +87,8 @@ public class DeckLoader : MonoBehaviour
     private void SuccessUpload(string data)
     {
         stringIDs = string.Empty;
-        print("upload deck " + (data == "done" ? "succes" : "fail"));
+        print("upload deck " + (data == "done" ? "succes" : "but something wrong/n" + data));
+        _manager.LockScreenSetActive(false);
     }
 
     private void OnDestroy()

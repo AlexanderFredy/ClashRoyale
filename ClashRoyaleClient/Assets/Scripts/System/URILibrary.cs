@@ -8,4 +8,5 @@ public class URILibrary : MonoBehaviour
 
     public const string GETDECKINFO = "Game/getDeckInfo.php";
     public const string SAVEDECK = "Game/saveDeck.php";
+    public const string GETRATING = "Game/getRating.php";
 }

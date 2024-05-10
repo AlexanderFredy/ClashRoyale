@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class DeckManager : MonoBehaviour
     public event Action<IReadOnlyList<Card>> UpdateSelected;
     public event Action<IReadOnlyList<Card>> DeckUploadToDataBase;
 
+    [SerializeField] private GameObject _lockScreenCanvas;
     [SerializeField] private Card[] _cards;
     [SerializeField] private List<Card> _availableCards;// = new List<Card>();
     [SerializeField] private List<Card> _selectedCards;// = new List<Card>();
@@ -38,6 +40,8 @@ public class DeckManager : MonoBehaviour
 
         UpdateAvailable?.Invoke(AvailableCards, SelectedCards);
         UpdateSelected?.Invoke(SelectedCards);
+
+        _lockScreenCanvas.SetActive(false);
     }
 
     public void SaveDeckToDataBase(IReadOnlyList<Card> deck) 
@@ -50,6 +54,28 @@ public class DeckManager : MonoBehaviour
         UpdateSelected?.Invoke(SelectedCards);
 
         DeckUploadToDataBase?.Invoke(deck);
+
+        _lockScreenCanvas.SetActive(true);
+    }
+
+    public void LockScreenSetActive(bool enable)
+    {
+        _lockScreenCanvas.SetActive(enable);
+    }
+
+    public bool TryGetDeck(string[] CardsIDs, out Dictionary<string, Card> deck)
+    {
+        deck = new Dictionary<string, Card>();
+        for (int i = 0; i < CardsIDs.Length; i++)
+        {
+            if (int.TryParse(CardsIDs[i], out int id) == false || id == 0) return false;
+            Card card = _cards.FirstOrDefault(c => c.id == id);
+            if (card == null) return false;
+
+            deck.Add(CardsIDs[i], card);
+        }
+
+        return true;
     }
 }
 
