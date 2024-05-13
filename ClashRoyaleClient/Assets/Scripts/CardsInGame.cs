@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 public class CardsInGame : Singleton<CardsInGame>
@@ -26,4 +27,6 @@ public class CardsInGame : Singleton<CardsInGame>
         _playerDeck = new ReadOnlyDictionary<string, Card>(playerDeck);
         _enemyDeck = new ReadOnlyDictionary<string, Card>(enemyDeck);
     }
+
+    public List<string> GetAllID() => _playerDeck.Keys.ToList();
 }

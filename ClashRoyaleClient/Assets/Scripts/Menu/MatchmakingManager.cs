@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MatchmakingManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MatchmakingManager : MonoBehaviour
         public string[] player2;
     }
 
+    [SerializeField] private string _gameSceneName = "GamePlayScene";
     [SerializeField] private GameObject _mainMenuCanvas;
     [SerializeField] private GameObject _matchmakingCanvas;
     [SerializeField] private GameObject _cancelButton;
@@ -64,6 +66,7 @@ public class MatchmakingManager : MonoBehaviour
 
 
         CardsInGame.Instance.SetDeck(playerDeck, enemyDeck);
+        SceneManager.LoadScene(_gameSceneName);
     }
 
     private void CancelStart()

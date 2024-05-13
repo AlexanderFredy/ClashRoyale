@@ -84,5 +84,6 @@ public class Card
 {
     [field: SerializeField] public string name { get; private set; }
     [field: SerializeField] public int id { get; private set; }
-    [field: SerializeField] public Sprite sprite { get; private set; } 
+    [field: SerializeField] public Sprite sprite { get; private set; }
+    [field: SerializeField] public Unit unit { get; private set; }
 }
