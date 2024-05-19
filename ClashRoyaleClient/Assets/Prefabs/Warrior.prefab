@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 5482713760320517521}
+  _attackEffectGO: {fileID: 0}
 --- !u!1001 &3848689657062124013
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,6 +190,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spider Toxin
       objectReference: {fileID: 0}
+    - target: {fileID: 8754938060835480252, guid: 79f78ce4b8eba2a4c91a83e3d0133dbf,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0ae315a2425615d4eab8b7d47f914353, type: 2}
     - target: {fileID: 8754938060839623804, guid: 79f78ce4b8eba2a4c91a83e3d0133dbf,
         type: 3}
       propertyPath: m_Controller

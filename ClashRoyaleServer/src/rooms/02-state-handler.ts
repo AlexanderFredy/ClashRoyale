@@ -2,6 +2,7 @@ import { Room, Client, Delayed } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 import axios from 'axios';
 import {Library} from '../Library';
+import { json } from "express";
 
 export class Player extends Schema {
     
@@ -33,6 +34,19 @@ export class StateHandlerRoom extends Room<State> {
             console.log("StateHandlerRoom received message from", client.sessionId, ":", data);
             //this.state.movePlayer(client.sessionId, data);
         });
+
+        this.onMessage("Spawn", (client, data) => {
+            const spawnData = JSON.parse(data.json);
+
+            if(this.playersDeck.get(client.id).includes(spawnData.cardID)){
+                spawnData.serverTime = this.clock.elapsedTime;
+                const json = JSON.stringify(spawnData);
+                client.send("SpawnPlayer",json);
+                this.broadcast("SpawnEnemy",json,{except: client});
+            } else {
+                client.send("Cheat");
+            }                   
+        });
     }
 
     onAuth(client, options, req) {
@@ -41,6 +55,8 @@ export class StateHandlerRoom extends Room<State> {
 
     gameIsStarted: boolean = false;
     awaitStart: Delayed;
+    startTimer: Delayed;
+    tickCount = 0;
     async onJoin (client: Client, data) {
         try{
             const response = await axios.post(Library.getDeckURI,{key: Library.phpKEY, userID: data.id});
@@ -59,6 +75,18 @@ export class StateHandlerRoom extends Room<State> {
             this.gameIsStarted = true;
             this.broadcast("Start",JSON.stringify({player1ID: this.clients[0].id, player1: this.playersDeck.get(this.clients[0].id),player2: this.playersDeck.get(this.clients[1].id)}))
         },1000);
+
+        this.startTimer = this.clock.setInterval(() =>{
+            try {
+                this.tickCount++;
+                this.broadcast("StartTick", JSON.stringify({tick: this.tickCount, time: this.clock.elapsedTime}));
+                console.log("tick: " + this.tickCount + "  elapsedTime: " + this.clock.elapsedTime);
+                if (this.tickCount > 9) this.startTimer.clear();
+            } catch (error)
+            {
+                console.log(error);
+            }
+        }, 1000);
         
     }
 

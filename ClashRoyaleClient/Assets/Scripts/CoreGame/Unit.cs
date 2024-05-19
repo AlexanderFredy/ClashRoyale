@@ -18,8 +18,10 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
     private UnitState _attackState;
     private UnitState _currentState;
 
-    private void Start()
+    public void Init(bool isEnemy)
     {
+        this.IsEnemy = isEnemy;
+
         CreateStates();
 
         _currentState = _defaultState;

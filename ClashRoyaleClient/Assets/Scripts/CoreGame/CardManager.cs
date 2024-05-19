@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
 {
+    [SerializeField] private Spawner _spawner;
     [SerializeField] private CardController[] _cardsControllers;
     [SerializeField] private Image _nextCardImage;
     [SerializeField] private int _layerIndex = 6;
@@ -19,8 +20,8 @@ public class CardManager : MonoBehaviour
         _camera = Camera.main;
         _ids = new string[_cardsControllers.Length];
 
-        CardsInGame cardsInGame = CardsInGame.Instance;
-        _freeCardIDs = cardsInGame.GetAllID();
+        _cardsInGame = CardsInGame.Instance;
+        _freeCardIDs = _cardsInGame.GetAllID();
         MixList(_freeCardIDs);
 
         for (int i = 0; i < _cardsControllers.Length; i++)
@@ -28,7 +29,7 @@ public class CardManager : MonoBehaviour
             string cardID = _freeCardIDs[0];
             _freeCardIDs.RemoveAt(0);
             _ids[i] = cardID;
-            _cardsControllers[i].Init(this, i, cardsInGame._playerDeck[cardID].sprite);
+            _cardsControllers[i].Init(this, i, _cardsInGame._playerDeck[cardID].sprite);
         }
 
         SetNextRandomCard();
@@ -60,7 +61,7 @@ public class CardManager : MonoBehaviour
 
     public void Release(int cardControllerIndex, in Vector3 screenPointPosition)
     {
-        if (TryGetSpawnPoint(screenPointPosition, out Vector3 screenPoint) == false) return;
+        if (TryGetSpawnPoint(screenPointPosition, out Vector3 spawnPoint) == false) return;
 
         string id = _ids[cardControllerIndex];
 
@@ -70,6 +71,8 @@ public class CardManager : MonoBehaviour
         _cardsControllers[cardControllerIndex].SetSprite(_cardsInGame._playerDeck[_nextCardID].sprite);
 
         SetNextRandomCard();
+
+        _spawner.SendSpawn(id, spawnPoint);
     }
 
     private bool TryGetSpawnPoint(Vector3 screenPointPosition, out Vector3 spawnPoint)

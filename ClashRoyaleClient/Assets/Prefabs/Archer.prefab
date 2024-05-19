@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1298506945824693334}
+  _attackEffectGO: {fileID: 0}
 --- !u!1001 &8168110020629895099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -194,6 +195,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: d12d259981187a640b4a28d6ce6a71f9, type: 2}
+    - target: {fileID: 7160668322247734573, guid: a87f651b28f3d234db143fa6b87bea0c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3f3d66ca8fb2e114ab9ffb041f4d5902, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
