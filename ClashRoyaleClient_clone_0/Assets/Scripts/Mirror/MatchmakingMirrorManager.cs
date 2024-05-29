@@ -1,7 +1,9 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MatchmakingMirrorManager : Singleton<MatchmakingMirrorManager>
 {
@@ -11,6 +13,13 @@ public class MatchmakingMirrorManager : Singleton<MatchmakingMirrorManager>
     public void ConnectedFinish(string[] cardIDs)
     {
         _matchmakingMirrorUI.SetImages(cardIDs);
+    }
+
+    public LocalSceneDependency localSceneDependency { get; private set; }
+
+    public void AddNewSceneClient(LocalSceneDependency localSceneDependency)
+    {
+        throw new NotImplementedException();
     }
 
 #if UNITY_SERVER
@@ -23,7 +32,9 @@ public class MatchmakingMirrorManager : Singleton<MatchmakingMirrorManager>
     private const string KEY = "key";
     private const string USERID = "userID";
 
+    [Scene, SerializeField] private string _additiveGameScene;
     private List<PlayerPrefab> _players = new List<PlayerPrefab>();
+    private Queue<LocalSceneDependency> _localSceneDependencyQueue = new();
 
     [Server]
     public void OnJoint(PlayerPrefab player, string sqlID)
@@ -40,11 +51,58 @@ public class MatchmakingMirrorManager : Singleton<MatchmakingMirrorManager>
 
     private void SuccsessLoadDeck(string sqlID, PlayerPrefab player, string arrString)
     {
-        _players.Add(player);
         string json = "{\"arr\":" + arrString + "}";
         string[] cardsId = JsonUtility.FromJson<StringArray>(json).arr;
+        if (player == null)
+        {
+            Debug.LogWarning("Player leave match");
+            return;
+        }
         player.SetSqlId(sqlID);
         player.SuccessConnected(cardsId);
+
+        if (_players.Count == 0)
+        {
+            _players.Add(player);
+            return;
+        }
+
+        PlayerPrefab secondPlayer = _players[0];
+        _players.RemoveAt(0);
+
+        StartCoroutine(StartMatch(player, secondPlayer));
+    }
+
+    private IEnumerator StartMatch(PlayerPrefab player1, PlayerPrefab player2)
+    {
+        yield return SceneManager.LoadSceneAsync(_additiveGameScene, LoadSceneMode.Additive);
+        yield return new WaitUntil(() => _localSceneDependencyQueue.Count > 0);
+        var localSceneDependency = _localSceneDependencyQueue.Dequeue();
+        localSceneDependency.InitServer(GetMatchHeight());
+        
+        ChangePlayerScene(player1, localSceneDependency.gameObject.scene);
+        ChangePlayerScene(player2, localSceneDependency.gameObject.scene);
+    }
+
+    private void ChangePlayerScene(PlayerPrefab player, Scene scene)
+    {
+        var client = player.connectionToClient;
+
+        NetworkServer.RemovePlayerForConnection(client, false);
+        SceneManager.MoveGameObjectToScene(player.gameObject, scene);
+        client.Send(new SceneMessage
+        {
+            sceneName = scene.name,
+            sceneOperation = SceneOperation.LoadAdditive,
+            customHandling = true
+        });
+        NetworkServer.AddPlayerForConnection(client, player.gameObject);
+    }
+
+    private int GetMatchHeight()
+    {
+        int height = 0;
+        return height;
     }
 
     [Server]
@@ -52,6 +110,11 @@ public class MatchmakingMirrorManager : Singleton<MatchmakingMirrorManager>
     {
         if (_players.Contains(player))
             _players.Remove(player);
+    }
+
+    public void AddNewSceneServer(LocalSceneDependency localSceneDependency)
+    {
+        _localSceneDependencyQueue.Enqueue(localSceneDependency);
     }
 #endif
 }

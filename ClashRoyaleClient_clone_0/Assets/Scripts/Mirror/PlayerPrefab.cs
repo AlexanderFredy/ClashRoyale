@@ -8,8 +8,15 @@ public class PlayerPrefab : NetworkBehaviour
 
     public void SetSqlId(string sqlID) => this.sqlID = sqlID;
 
+    void Start()
+    {
+        print("player start");
+    }
+
+
     public override void OnStartClient()
     {
+        print("OnStartClient");
         base.OnStartClient();
         string id = UserInfo.Instance.ID.ToString();
         OnJoint(id);
@@ -27,6 +34,7 @@ public class PlayerPrefab : NetworkBehaviour
     public void OnJoint(string sqlID)
     {
 #if UNITY_SERVER
+        if (string.IsNullOrEmpty(this.sqlID) == false) return;
         MatchmakingMirrorManager.Instance.OnJoint(this, sqlID);
 #endif
     }

@@ -1,6 +1,8 @@
 using Mirror;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MirrorMultiplayerManager : NetworkManager
 {
@@ -26,6 +28,34 @@ public class MirrorMultiplayerManager : NetworkManager
         {
             NetworkClient.RegisterPrefab(prefabs[i]);
         }
+    }
+
+    public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling)
+    {
+        if (sceneOperation == SceneOperation.LoadAdditive) StartCoroutine(LoadAdditive(newSceneName));
+        if (sceneOperation == SceneOperation.UnloadAdditive) StartCoroutine(UnloadAdditive(newSceneName));
+    }
+
+    private IEnumerator LoadAdditive(string sceneName)
+    {
+        if (mode == NetworkManagerMode.ClientOnly)
+        {
+            yield return SceneManager.LoadSceneAsync(sceneName,LoadSceneMode.Additive);
+        }
+
+        NetworkClient.isLoadingScene = false;
+        OnClientSceneChanged();
+    }
+
+    private IEnumerator UnloadAdditive(string sceneName)
+    {
+        if (mode == NetworkManagerMode.ClientOnly)
+        {
+            yield return SceneManager.UnloadSceneAsync(sceneName);
+        }
+
+        NetworkClient.isLoadingScene = false;
+        OnClientSceneChanged();
     }
     #endregion
 }
