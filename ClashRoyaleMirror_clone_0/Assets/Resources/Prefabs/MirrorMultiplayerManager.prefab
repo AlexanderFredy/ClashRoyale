@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2591435054110424579}
   - component: {fileID: 3103523377214040064}
   - component: {fileID: 1447191591797198514}
+  - component: {fileID: -8423772119597624332}
   m_Layer: 0
   m_Name: MirrorMultiplayerManager
   m_TagString: Untagged
@@ -47,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   runInBackground: 1
-  headlessStartMode: 0
+  headlessStartMode: 1
   editorAutoStart: 0
   sendRate: 60
   autoStartServerBuild: 0
@@ -80,6 +81,8 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
+  _playerPrefab: {fileID: 8932020966469791504, guid: 915757a1f07681d4788f20580fb54276,
+    type: 3}
 --- !u!114 &1447191591797198514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,3 +112,20 @@ MonoBehaviour:
   debugLog: 0
   statisticsGUI: 0
   statisticsLog: 0
+--- !u!114 &-8423772119597624332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898058491448393086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1878715406
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
