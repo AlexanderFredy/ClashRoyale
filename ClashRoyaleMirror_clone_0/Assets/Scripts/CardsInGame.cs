@@ -11,13 +11,14 @@ public class CardsInGame : Singleton<CardsInGame>
         DontDestroyOnLoad(gameObject);
     }
 
+    [SerializeField] private CardsLibrary _cardsLibrary;
     public ReadOnlyDictionary<string, Card> _playerDeck { get; private set; }
     public ReadOnlyDictionary<string, Card> _enemyDeck { get; private set; }
 
     public void SetDeck(string[] playerCards, string[] enemyCards)
     {
-        bool player = FindObjectOfType<DeckManager>().TryGetDeck(playerCards, out Dictionary<string, Card> playerDeck);
-        bool enemy = FindObjectOfType<DeckManager>().TryGetDeck(enemyCards, out Dictionary<string, Card> enemyDeck);
+        bool player = _cardsLibrary.TryGetDeck(playerCards, out Dictionary<string, Card> playerDeck);
+        bool enemy = _cardsLibrary.TryGetDeck(enemyCards, out Dictionary<string, Card> enemyDeck);
 
         if (!player)
             Debug.LogError("Loading player deck fail!");

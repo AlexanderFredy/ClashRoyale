@@ -1,18 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class LocalSceneDependency : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+#if UNITY_SERVER
+        StartServer();
+#else
+        StartClient();
+#endif
     }
 
-    // Update is called once per frame
-    void Update()
+#if UNITY_SERVER
+    private void StartServer()
     {
-        
+        MatchmakingManager.Instance.AddNewSceneServer(this);
+    }
+
+    public void InitServer(int sceneLevelNumber)
+    {
+   
+    }
+#endif
+
+    private void StartClient()
+    {
+        MatchmakingManager.Instance.AddNewSceneClient(this);
     }
 }

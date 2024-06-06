@@ -15,14 +15,15 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
     {
         _matchmakingMirrorUI.SetImages(cardIDs);
     }
-    #endregion
 
     public LocalSceneDependency localSceneDependency { get; private set; }
 
     public void AddNewSceneClient(LocalSceneDependency localSceneDependency)
     {
-        throw new NotImplementedException();
+        this.localSceneDependency = localSceneDependency;
     }
+
+    #endregion
 
     #region SERVER
 
@@ -55,7 +56,6 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
 
     private void SuccsessLoadDeck(string sqlID, PlayerPrefab player, string arrString)
     {
-        _players.Add(player);
         string json = "{\"arr\":" + arrString + "}";
         string[] cardsId = JsonUtility.FromJson<StringArray>(json).arr;
         if (player == null)
@@ -67,49 +67,49 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
         player.SetSqlId(sqlID);
         player.SuccessConnected(cardsId);
 
-        //if (_players.Count == 0)
-        //{
-        //    _players.Add(player);
-        //    return;
-        //}
+        if (_players.Count == 0)
+        {
+            _players.Add(player);
+            return;
+        }
 
-        //PlayerPrefab secondPlayer = _players[0];
-        //_players.RemoveAt(0);
+        PlayerPrefab secondPlayer = _players[0];
+        _players.RemoveAt(0);
 
-        //StartCoroutine(StartMatch(player, secondPlayer));
+        StartCoroutine(StartMatch(player, secondPlayer));
     }
 
-    //private IEnumerator StartMatch(PlayerPrefab player1, PlayerPrefab player2)
-    //{
-    //    yield return SceneManager.LoadSceneAsync(_additiveGameScene, LoadSceneMode.Additive);
-    //    yield return new WaitUntil(() => _localSceneDependencyQueue.Count > 0);
-    //    var localSceneDependency = _localSceneDependencyQueue.Dequeue();
-    //    //localSceneDependency.InitServer(GetMatchHeight());
+    private IEnumerator StartMatch(PlayerPrefab player1, PlayerPrefab player2)
+    {
+        yield return SceneManager.LoadSceneAsync(_additiveGameScene, LoadSceneMode.Additive);
+        yield return new WaitUntil(() => _localSceneDependencyQueue.Count > 0);
+        var localSceneDependency = _localSceneDependencyQueue.Dequeue();
+        localSceneDependency.InitServer(GetMatchHeight());
 
-    //    ChangePlayerScene(player1, localSceneDependency.gameObject.scene);
-    //    ChangePlayerScene(player2, localSceneDependency.gameObject.scene);
-    //}
+        ChangePlayerScene(player1, localSceneDependency.gameObject.scene);
+        ChangePlayerScene(player2, localSceneDependency.gameObject.scene);
+    }
 
-    //private void ChangePlayerScene(PlayerPrefab player, Scene scene)
-    //{
-    //    var client = player.connectionToClient;
+    private void ChangePlayerScene(PlayerPrefab player, Scene scene)
+    {
+        var client = player.connectionToClient;
 
-    //    NetworkServer.RemovePlayerForConnection(client, false);
-    //    SceneManager.MoveGameObjectToScene(player.gameObject, scene);
-    //    client.Send(new SceneMessage
-    //    {
-    //        sceneName = scene.name,
-    //        sceneOperation = SceneOperation.LoadAdditive,
-    //        customHandling = true
-    //    });
-    //    NetworkServer.AddPlayerForConnection(client, player.gameObject);
-    //}
+        NetworkServer.RemovePlayerForConnection(client, false);
+        SceneManager.MoveGameObjectToScene(player.gameObject, scene);
+        client.Send(new SceneMessage
+        {
+            sceneName = scene.name,
+            sceneOperation = SceneOperation.LoadAdditive,
+            customHandling = true
+        });
+        NetworkServer.AddPlayerForConnection(client, player.gameObject);
+    }
 
-    //private int GetMatchHeight()
-    //{
-    //    int height = 0;
-    //    return height;
-    //}
+    private int GetMatchHeight()
+    {
+        int height = 0;
+        return height;
+    }
 
     [Server]
     public void OnLeave(PlayerPrefab player)
@@ -118,10 +118,10 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
             _players.Remove(player);
     }
 
-    //public void AddNewSceneServer(LocalSceneDependency localSceneDependency)
-    //{
-    //    _localSceneDependencyQueue.Enqueue(localSceneDependency);
-    //}
+    public void AddNewSceneServer(LocalSceneDependency localSceneDependency)
+    {
+        _localSceneDependencyQueue.Enqueue(localSceneDependency);
+    }
 #endif
     #endregion
 }

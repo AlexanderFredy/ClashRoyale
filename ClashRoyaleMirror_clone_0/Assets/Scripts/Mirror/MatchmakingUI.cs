@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MatchmakingUI : MonoBehaviour
 {
-    //[SerializeField] private CardsLibrary library;
+    [SerializeField] private CardsLibrary library;
     [SerializeField] private Image[] _images;
     [SerializeField] private GameObject _cancelButton;
 
@@ -38,7 +38,7 @@ public class MatchmakingUI : MonoBehaviour
         for (int i = 0; i < cardIDs.Length; i++)
         {
             int.TryParse(cardIDs[i], out int id);
-            //_images[i].sprite = library.GetCardByID(id).sprite;
+            _images[i].sprite = library.GetCardByID(id).sprite;
             _images[i].enabled = true;
         }
     }

@@ -30,32 +30,33 @@ public class MirrorMultiplayerManager : NetworkManager
         }
     }
 
-    //public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling)
-    //{
-    //    if (sceneOperation == SceneOperation.LoadAdditive) StartCoroutine(LoadAdditive(newSceneName));
-    //    if (sceneOperation == SceneOperation.UnloadAdditive) StartCoroutine(UnloadAdditive(newSceneName));
-    //}
+    public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling)
+    {
+        if (sceneOperation == SceneOperation.LoadAdditive) StartCoroutine(LoadAdditive(newSceneName));
+        if (sceneOperation == SceneOperation.UnloadAdditive) StartCoroutine(UnloadAdditive(newSceneName));
+    }
 
-    //private IEnumerator LoadAdditive(string sceneName)
-    //{
-    //    if (mode == NetworkManagerMode.ClientOnly)
-    //    {
-    //        yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-    //    }
+    private IEnumerator LoadAdditive(string sceneName)
+    {
+        if (mode == NetworkManagerMode.ClientOnly)
+        {
+            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        }
 
-    //    NetworkClient.isLoadingScene = false;
-    //    OnClientSceneChanged();
-    //}
+        NetworkClient.isLoadingScene = false;
+        OnClientSceneChanged();
+    }
 
-    //private IEnumerator UnloadAdditive(string sceneName)
-    //{
-    //    if (mode == NetworkManagerMode.ClientOnly)
-    //    {
-    //        yield return SceneManager.UnloadSceneAsync(sceneName);
-    //    }
+    private IEnumerator UnloadAdditive(string sceneName)
+    {
+        if (mode == NetworkManagerMode.ClientOnly)
+        {
+            yield return SceneManager.UnloadSceneAsync(sceneName);
+            yield return Resources.UnloadUnusedAssets();
+        }
 
-    //    NetworkClient.isLoadingScene = false;
-    //    OnClientSceneChanged();
-    //}
+        NetworkClient.isLoadingScene = false;
+        OnClientSceneChanged();
+    }
     #endregion
 }

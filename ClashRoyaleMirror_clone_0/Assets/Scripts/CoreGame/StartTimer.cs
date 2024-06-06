@@ -6,15 +6,7 @@ using static TimerManager;
 public class StartTimer : MonoBehaviour
 {
     [SerializeField] private Text _text;
-    void Start()
-    {
-        MultiplayerManager.Instance.StartTick += StartTick;
-    }
-
-    private void OnDestroy()
-    {
-        MultiplayerManager.Instance.StartTick -= StartTick;
-    }
+    [SerializeField] private GameObject _blockingImage;
 
     private void StartTick(string jsonTick)
     {
@@ -25,7 +17,7 @@ public class StartTimer : MonoBehaviour
             _text.text = (10 - tick.tick).ToString();
         } else
         {
-            Destroy(gameObject);
+            Destroy(_blockingImage);
         }
     }
 }

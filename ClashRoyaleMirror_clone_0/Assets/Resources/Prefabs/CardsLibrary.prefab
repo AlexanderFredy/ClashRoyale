@@ -1,0 +1,141 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &60662493621864018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9084791417516385266}
+  - component: {fileID: 1107374833679486948}
+  - component: {fileID: -1927787112391659963}
+  m_Layer: 0
+  m_Name: CardsLibrary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9084791417516385266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60662493621864018}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 132.87242, y: 363.1094, z: 1031.498}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1107374833679486948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60662493621864018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75bf4e8ea6b4e89499b4f127cc9976c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cards:
+  - <name>k__BackingField: EMPTY
+    <id>k__BackingField: 0
+    <sprite>k__BackingField: {fileID: 0}
+    <unit>k__BackingField: {fileID: 0}
+    <hologram>k__BackingField: {fileID: 0}
+  - <name>k__BackingField: Archer
+    <id>k__BackingField: 1
+    <sprite>k__BackingField: {fileID: 21300000, guid: f95ebedc516914743bb4890715a15eba,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: 47ad854431f0214478219864611ad53b,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 7160668322234071085, guid: a87f651b28f3d234db143fa6b87bea0c,
+      type: 3}
+  - <name>k__BackingField: Bat
+    <id>k__BackingField: 2
+    <sprite>k__BackingField: {fileID: 21300000, guid: 5fd11208c57460f4bb6c3b4af95708c6,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: 956cd7e7af164dc4f898f8faaa207683,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 6328325485107444708, guid: ad33f663ccb976944b5d6b42a39ac86a,
+      type: 3}
+  - <name>k__BackingField: Dragon
+    <id>k__BackingField: 3
+    <sprite>k__BackingField: {fileID: 21300000, guid: 2a28a85df13b14b4aafdccd632d9b102,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: 8b2b067fe6cd0e84a8ab0f168225441f,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 1464745901521549467, guid: 3b2bc9ea12bebd34db0ea2d87f964288,
+      type: 3}
+  - <name>k__BackingField: Golem
+    <id>k__BackingField: 4
+    <sprite>k__BackingField: {fileID: 21300000, guid: 7dc25ff3f5f05a74c917867dfacd7e0b,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: a5f75f09e59366f45afa738422c488aa,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 1734572081990470152, guid: 7f3425f16f17470468f250a8fd950f73,
+      type: 3}
+  - <name>k__BackingField: Snake
+    <id>k__BackingField: 5
+    <sprite>k__BackingField: {fileID: 21300000, guid: f7cd2cd4cf3bc554caea402c61fee7bf,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: 60c02400d8ca4c744bc01d84b2fd3b3f,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 0}
+  - <name>k__BackingField: Warrior
+    <id>k__BackingField: 6
+    <sprite>k__BackingField: {fileID: 21300000, guid: 64a386361255cc54b892696d44229282,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: 11676519bcd3eba44baeb560d4c62c98,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 8754938060832370620, guid: 79f78ce4b8eba2a4c91a83e3d0133dbf,
+      type: 3}
+  - <name>k__BackingField: Warrior Green
+    <id>k__BackingField: 7
+    <sprite>k__BackingField: {fileID: 21300000, guid: 206b1ee59bff757429bfb38fbfb987dd,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: ae9d2dda83ce36146bc47b597ce52cbc,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 8754938060832370620, guid: 79f78ce4b8eba2a4c91a83e3d0133dbf,
+      type: 3}
+  - <name>k__BackingField: Golem Dark
+    <id>k__BackingField: 8
+    <sprite>k__BackingField: {fileID: 21300000, guid: ca1094c0460b62a4899bdf88cf630753,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: b634dd959698e744ba615394a76d681a,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 1734572081990470152, guid: 7f3425f16f17470468f250a8fd950f73,
+      type: 3}
+  - <name>k__BackingField: Warrior Orange
+    <id>k__BackingField: 9
+    <sprite>k__BackingField: {fileID: 21300000, guid: 94cff2a1479cce147a9670ac25d5ae40,
+      type: 3}
+    <unit>k__BackingField: {fileID: 7927309734242240902, guid: 68ca23d7ac51307419d7b69d68b84d47,
+      type: 3}
+    <hologram>k__BackingField: {fileID: 8754938060832370620, guid: 79f78ce4b8eba2a4c91a83e3d0133dbf,
+      type: 3}
+--- !u!114 &-1927787112391659963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60662493621864018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 126545326
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
