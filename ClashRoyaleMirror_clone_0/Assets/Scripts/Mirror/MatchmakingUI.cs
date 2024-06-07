@@ -42,4 +42,10 @@ public class MatchmakingUI : MonoBehaviour
             _images[i].enabled = true;
         }
     }
+
+    [Client]
+    public void Destroy()
+    {
+        Destroy(gameObject);
+    }
 }

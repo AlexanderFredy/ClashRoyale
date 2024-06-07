@@ -16,6 +16,9 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
         _matchmakingMirrorUI.SetImages(cardIDs);
     }
 
+    [Client]
+    public void DestroyUI() => _matchmakingMirrorUI.Destroy();
+
     public LocalSceneDependency localSceneDependency { get; private set; }
 
     public void AddNewSceneClient(LocalSceneDependency localSceneDependency)
@@ -65,6 +68,7 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
         }
 
         player.SetSqlId(sqlID);
+        player.SetDeck(cardsId);
         player.SuccessConnected(cardsId);
 
         if (_players.Count == 0)
@@ -88,6 +92,8 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
 
         ChangePlayerScene(player1, localSceneDependency.gameObject.scene);
         ChangePlayerScene(player2, localSceneDependency.gameObject.scene);
+        player1.StartMatch(player1.deck, player2.deck);
+        player2.StartMatch(player2.deck, player1.deck);
     }
 
     private void ChangePlayerScene(PlayerPrefab player, Scene scene)
@@ -96,6 +102,7 @@ public class MatchmakingManager : Singleton<MatchmakingManager>
 
         NetworkServer.RemovePlayerForConnection(client, false);
         SceneManager.MoveGameObjectToScene(player.gameObject, scene);
+        print($"Send message: scene {scene.name} add for client");
         client.Send(new SceneMessage
         {
             sceneName = scene.name,

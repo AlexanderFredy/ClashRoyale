@@ -5,22 +5,28 @@ using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
 {
-    [SerializeField] private Spawner _spawner;
     [SerializeField] private CardController[] _cardsControllers;
     [SerializeField] private Image _nextCardImage;
     [SerializeField] private int _layerIndex = 6;
-    private CardsInGame _cardsInGame;
+    [SerializeField] private CardsInGame _cardsInGame;
+    private Spawner _spawner;
     private string[] _ids;
     private Camera _camera;
     private List<string> _freeCardIDs;
     private string _nextCardID;
 
-    void Start()
+    public void SetSpawner(Spawner spawner) => _spawner = spawner;
+
+    public void Init(string[] playerCards, string[] enemyCards)
     {
+        Debug.Log($"PlayerDeck = [{playerCards[0]},{playerCards[1]},{playerCards[2]},{playerCards[3]},{playerCards[4]}," +
+            $"{playerCards[5]},{playerCards[6]},{playerCards[7]}] && EnemyDeck = [{enemyCards[0]},{enemyCards[1]}," +
+            $"{enemyCards[2]},{enemyCards[3]},{enemyCards[4]},{enemyCards[5]},{enemyCards[6]},{enemyCards[7]}]");
+        
+        _cardsInGame.SetDecks(playerCards,enemyCards);
         _camera = Camera.main;
         _ids = new string[_cardsControllers.Length];
 
-        _cardsInGame = CardsInGame.Instance;
         _freeCardIDs = _cardsInGame.GetAllID();
         MixList(_freeCardIDs);
 
@@ -88,5 +94,18 @@ public class CardManager : MonoBehaviour
    
         spawnPoint = Vector3.zero;
         return false;
+    }
+
+    public Unit GetUnityByID(string id, bool isEnemy)
+    {
+        if (isEnemy)
+            return _cardsInGame._enemyDeck[id].unit;
+        else
+            return _cardsInGame._playerDeck[id].unit;
+    }
+
+    public GameObject GetHologramByID(string id)
+    {
+        return _cardsInGame._playerDeck[id].hologram;
     }
 }

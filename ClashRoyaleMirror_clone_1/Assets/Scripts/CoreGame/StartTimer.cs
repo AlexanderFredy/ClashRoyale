@@ -1,23 +1,18 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static TimerManager;
 
 public class StartTimer : MonoBehaviour
 {
     [SerializeField] private Text _text;
     [SerializeField] private GameObject _blockingImage;
 
-    private void StartTick(string jsonTick)
+    public void StartTick(int tick)
     {
-        Tick tick = JsonUtility.FromJson<Tick>(jsonTick);
+        _text.text = tick.ToString();
+    }
 
-        if (tick.tick < 10)
-        {
-            _text.text = (10 - tick.tick).ToString();
-        } else
-        {
-            Destroy(_blockingImage);
-        }
+    public void Destroy()
+    {
+        Destroy(_blockingImage);
     }
 }

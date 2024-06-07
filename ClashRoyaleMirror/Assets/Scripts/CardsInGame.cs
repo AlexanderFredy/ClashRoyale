@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
-public class CardsInGame : Singleton<CardsInGame>
+public class CardsInGame : MonoBehaviour
 {
     void Awake()
     {
@@ -15,7 +15,7 @@ public class CardsInGame : Singleton<CardsInGame>
     public ReadOnlyDictionary<string, Card> _playerDeck { get; private set; }
     public ReadOnlyDictionary<string, Card> _enemyDeck { get; private set; }
 
-    public void SetDeck(string[] playerCards, string[] enemyCards)
+    public void SetDecks(string[] playerCards, string[] enemyCards)
     {
         bool player = _cardsLibrary.TryGetDeck(playerCards, out Dictionary<string, Card> playerDeck);
         bool enemy = _cardsLibrary.TryGetDeck(enemyCards, out Dictionary<string, Card> enemyDeck);
