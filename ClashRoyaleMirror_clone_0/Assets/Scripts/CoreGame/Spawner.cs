@@ -8,57 +8,11 @@ using UnityEngine;
 public class Spawner : NetworkBehaviour
 {
     private CardManager _cardManager;
+    private MapInfo _mapInfo;
+    
+    #region CLIENT
     private Queue<GameObject> _holograms = new Queue<GameObject>();
-
-    private void SpawnEnemy(string json) => Spawn(json, true);
-
-    private void SpawnPlayer(string json) => Spawn(json, false);
-
-    public void Spawn(string jsonSpawnData, bool isEnemy)
-    {
-        SpawnData data = JsonUtility.FromJson<SpawnData>(jsonSpawnData);
-        string id = data.cardID;
-        Vector3 spawnPoint = new Vector3(data.x, data.y, data.z);
-
-        Unit unitPrefab = _cardManager.GetUnityByID(id, isEnemy);
-        Quaternion rotation = Quaternion.identity;
-        if (isEnemy)
-        {
-            rotation = Quaternion.Euler(0,180,0);
-            spawnPoint *= -1;
-        }     
-
-        if (isEnemy == false && _holograms.Count > 0)
-        {
-            var hologram = _holograms.Dequeue();
-            Destroy(hologram);
-        }
-
-        Unit unit = Instantiate(unitPrefab, spawnPoint, rotation);
-        unit.Init(isEnemy);
-        MapInfo.Instance.AddUnit(unit);
-    }
-
-    private void CancelSpawn()
-    {
-        if (_holograms.Count < 1) return;
-     
-            var hologram = _holograms.Dequeue();
-            Destroy(hologram);
-    }
-
-    public void SendSpawn(string id, in Vector3 spawnPoint)
-    {
-        var hologram = Instantiate(_cardManager.GetHologramByID(id), spawnPoint, Quaternion.identity);
-        _holograms.Enqueue(hologram);
-
-        Dictionary<string, string> data = new Dictionary<string, string>()
-        {
-            {"json", JsonUtility.ToJson(new SpawnData(id,spawnPoint)) }
-        };
-
-        MultiplayerManager.Instance.SendMessage("Spawn", data);
-    }
+    private PlayerPrefab _playerPrefab;
 
     public override void OnStartClient()
     {
@@ -71,24 +25,59 @@ public class Spawner : NetworkBehaviour
         var manager = MatchmakingManager.Instance;
         yield return new WaitUntil(() => manager.localSceneDependency != null);
 
-        manager.localSceneDependency.cardManager.SetSpawner(this);
+        manager.localSceneDependency.SetSpawner(this);
+
+        _cardManager = manager.localSceneDependency.cardManager;
+        _cardManager.SetSpawner(this);
+
+        _playerPrefab = NetworkClient.localPlayer.GetComponent<PlayerPrefab>();
     }
 
-    [System.Serializable]
-    public class SpawnData
+    public void SendSpawn(string id, in Vector3 spawnPoint)
     {
-        public SpawnData(string id, Vector3 spawnPoint)
-        {
-            cardID = id;
-            x = spawnPoint.x;
-            y = spawnPoint.y;
-            z = spawnPoint.z;
-        }
-        
-        public string cardID;
-        public float x;
-        public float y;
-        public float z;
-        public uint serverTime;
+        print(spawnPoint);
+        var hologram = Instantiate(_cardManager.GetHologramByID(id), spawnPoint, Quaternion.identity);
+        _holograms.Enqueue(hologram);
+
+        _playerPrefab.CmdSpawn(id, spawnPoint);
     }
+
+    public void DestroyHologram()
+    {
+        if (_holograms.Count < 1) return;
+
+        var hologram = _holograms.Dequeue();
+        Destroy(hologram);
+    }
+    #endregion
+
+    #region SERVER
+
+    private float _height;
+    public void SetHeight(float spawnHeight)
+    {
+        _height = spawnHeight;
+    }
+    public void InitServer(CardManager cardManager, MapInfo mapInfo)
+    {
+        _cardManager = cardManager;
+        _mapInfo = mapInfo;
+    }
+
+    [Server]
+    public void Spawn(string id, Vector3 spawnPoint, bool isEnemy)
+    {
+        spawnPoint.y = _height;
+
+        Unit unitPrefab = _cardManager.GetUnityByID(id, isEnemy);
+        Quaternion rotation = isEnemy ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+
+        Unit unit = Instantiate(unitPrefab, spawnPoint, rotation, transform);
+        unit.Init(isEnemy, _mapInfo);
+        _mapInfo.AddUnit(unit);
+
+        NetworkServer.Spawn(unit.gameObject);
+    }
+
+    #endregion
 }

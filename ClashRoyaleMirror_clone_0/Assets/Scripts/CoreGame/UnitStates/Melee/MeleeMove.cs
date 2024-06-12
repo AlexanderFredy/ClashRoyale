@@ -32,7 +32,7 @@ public class MeleeMove : UnitStateNavMeshMove
 
     private bool TryChaseUnit()
     {
-        bool hasEnemy = MapInfo.Instance.TryGetNearestWalkingUnit(_unit.transform.position, _targetIsEnemy, out Unit enemy, out float distance);
+        bool hasEnemy = _unit.mapInfo.TryGetNearestWalkingUnit(_unit.transform.position, _targetIsEnemy, out Unit enemy, out float distance);
         if (hasEnemy == false) return false;
 
         if (_unit.parameters.startChaseDistance >= distance)

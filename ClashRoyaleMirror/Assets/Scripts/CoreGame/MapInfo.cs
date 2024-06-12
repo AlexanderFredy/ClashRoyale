@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapInfo : Singleton<MapInfo>
+public class MapInfo : MonoBehaviour
 {
     [SerializeField] private List<Tower> _enemyTowers;
     [SerializeField] private List<Tower> _playersTowers;
@@ -19,6 +19,12 @@ public class MapInfo : Singleton<MapInfo>
         SubscribeDestroy(_playersWalkingUnits);
         SubscribeDestroy(_enemyFlyingUnits);
         SubscribeDestroy(_playersFlyingUnits);
+    }
+
+    public void AddTower(Tower tower, bool isEnemy)
+    { 
+        List<Tower> list = isEnemy ? _enemyTowers : _playersTowers;
+        AddObjectToList(list, tower);
     }
 
     public void AddUnit(Unit unit)

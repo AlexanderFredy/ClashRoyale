@@ -5,6 +5,6 @@ public class MeleeChase : UnitStateChase
 {
     protected override void FindTargetUnit(out Unit targetUnit)
     {
-        MapInfo.Instance.TryGetNearestWalkingUnit(_unit.transform.position, _targetIsEnemy, out targetUnit, out float distance);
+        _unit.mapInfo.TryGetNearestWalkingUnit(_unit.transform.position, _targetIsEnemy, out targetUnit, out float distance);
     }
 }
